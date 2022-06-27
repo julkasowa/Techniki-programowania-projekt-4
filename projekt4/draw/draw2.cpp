@@ -24,6 +24,18 @@ int col = 0;
 std::vector<Point> data;
 RECT drawArea1 = { 0, 0, 150, 200 };
 RECT drawArea2 = { 50, 400, 650, 422};
+int l1 = 150;
+int l2 = 120;
+int angle1 = atan(1) * 4 * 5 / 3;
+int angle2 = angle1 + atan(1) * 4 * 2 / 3;
+int x = 0;
+int y = 0;
+int wSquare = 30;
+int wCircle = 20;
+int wTriangle = 40;
+int wRectangle = 50;
+double p = 1;
+
 
 // Forward declarations of functions included in this code module:
 ATOM				MyRegisterClass(HINSTANCE hInstance);
@@ -39,10 +51,24 @@ void MyOnPaint(HDC hdc)
 	Pen pen(Color(255, 0, 0, 255));
 	Pen pen2(Color(255, 25*col, 0, 255));
 
-	for (int i = 1; i < 100; i++)
-		graphics.DrawLine(&pen2, data[i - 1].X, data[i - 1].Y, data[i].X, data[i].Y);
+	PointF trianglePoints[3];
+	trianglePoints[0] = PointF(240.0F, 230.0F);
+	trianglePoints[1] = PointF(290.0F, 230.0F);
+	trianglePoints[2] = PointF(265.0F, 180.0F);
 
-	graphics.DrawRectangle(&pen, 50 + value, 400, 10, 20);
+	graphics.DrawLine(&pen, 375, 300, 475, 300);
+	int c1 = 425 + cos(angle1) * l1;
+	int d1 = 300 + sin(angle1) * l1;
+	graphics.DrawLine(&pen, 425, 300, c1, d1);
+	x = c1 + cos(angle2) * l2;
+	y = d1 + sin(angle2) * l2;
+	graphics.DrawLine(&pen, c1, d1, x, y);
+
+	graphics.DrawRectangle(&pen, 240, 60, 50, 50);
+	graphics.DrawEllipse(&pen, 240, 120, 50, 50);
+	graphics.DrawPolygon(&pen, trianglePoints, 3);
+	graphics.DrawRectangle(&pen, 230, 240, 70, 50);
+
 }
 
 void repaintWindow(HWND hWnd, HDC &hdc, PAINTSTRUCT &ps, RECT *drawArea)
@@ -58,10 +84,7 @@ void repaintWindow(HWND hWnd, HDC &hdc, PAINTSTRUCT &ps, RECT *drawArea)
 
 void inputData()
 {	
-	data.push_back(Point(0, 0));
-	for (int i = 1; i < 100; i++){
-		data.push_back(Point(2*i+1, 200 * rand()/RAND_MAX));
-	}
+	
 }
 
 
@@ -81,7 +104,6 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
-	// TODO: Place code here.
 	MSG msg;
 	HACCEL hAccelTable;
 
@@ -180,10 +202,149 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 	// create button and store the handle                                                       
 	
+	hwndButton = CreateWindow(TEXT("button"),                     // The class name required is button
+		TEXT("Tower S"),                  // the caption of the button
+		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
+		0, 60,                                  // the left and top co-ordinates
+		80, 50,                              // width and height
+		hWnd,                                 // parent window handle
+		(HMENU)ID_BUTTON2,                   // the ID of your button
+		hInstance,                            // the instance of your application
+		NULL);                               // extra bits you dont really need
+
+	hwndButton = CreateWindow(TEXT("button"),                     // The class name required is button
+		TEXT("Tower C"),                  // the caption of the button
+		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
+		0, 120,                                  // the left and top co-ordinates
+		80, 50,                              // width and height
+		hWnd,                                 // parent window handle
+		(HMENU)ID_BUTTON3,                   // the ID of your button
+		hInstance,                            // the instance of your application
+		NULL);                               // extra bits you dont really need
+	
+	hwndButton = CreateWindow(TEXT("button"),                     // The class name required is button
+		TEXT("Tower T"),                  // the caption of the button
+		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
+		0, 180,                                  // the left and top co-ordinates
+		80, 50,                              // width and height
+		hWnd,                                 // parent window handle
+		(HMENU)ID_BUTTON4,                   // the ID of your button
+		hInstance,                            // the instance of your application
+		NULL);                               // extra bits you dont really need
+
+	hwndButton = CreateWindow(TEXT("button"),                     // The class name required is button
+		TEXT("Tower R"),                  // the caption of the button
+		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
+		0, 240,                                  // the left and top co-ordinates
+		80, 50,                              // width and height
+		hWnd,                                 // parent window handle
+		(HMENU)ID_BUTTON5,                   // the ID of your button
+		hInstance,                            // the instance of your application
+		NULL);                               // extra bits you dont really need
+
+	hwndButton = CreateWindow(TEXT("button"),                     // The class name required is button
+		TEXT("30"),                  // the caption of the button
+		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
+		90, 60,                                  // the left and top co-ordinates
+		60, 50,                              // width and height
+		hWnd,                                 // parent window handle
+		(HMENU)ID_BUTTON6,                   // the ID of your button
+		hInstance,                            // the instance of your application
+		NULL);                               // extra bits you dont really need
+
+	hwndButton = CreateWindow(TEXT("button"),                     // The class name required is button
+		TEXT("20"),                  // the caption of the button
+		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
+		90, 120,                                  // the left and top co-ordinates
+		60, 50,                              // width and height
+		hWnd,                                 // parent window handle
+		(HMENU)ID_BUTTON7,                   // the ID of your button
+		hInstance,                            // the instance of your application
+		NULL);                               // extra bits you dont really need
+
+	hwndButton = CreateWindow(TEXT("button"),                     // The class name required is button
+		TEXT("40"),                  // the caption of the button
+		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
+		90, 180,                                  // the left and top co-ordinates
+		60, 50,                              // width and height
+		hWnd,                                 // parent window handle
+		(HMENU)ID_BUTTON8,                   // the ID of your button
+		hInstance,                            // the instance of your application
+		NULL);                               // extra bits you dont really need
+
+	hwndButton = CreateWindow(TEXT("button"),                     // The class name required is button
+		TEXT("50"),                  // the caption of the button
+		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
+		90, 240,                                  // the left and top co-ordinates
+		60, 50,                              // width and height
+		hWnd,                                 // parent window handle
+		(HMENU)ID_BUTTON9,                   // the ID of your button
+		hInstance,                            // the instance of your application
+		NULL);                               // extra bits you dont really need
+
+	hwndButton = CreateWindow(TEXT("button"),                     // The class name required is button
+		TEXT("50"),                  // the caption of the button
+		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
+		160, 60,                                  // the left and top co-ordinates
+		60, 50,                              // width and height
+		hWnd,                                 // parent window handle
+		(HMENU)ID_BUTTON18,                   // the ID of your button
+		hInstance,                            // the instance of your application
+		NULL);                               // extra bits you dont really need
+
+	hwndButton = CreateWindow(TEXT("button"),                     // The class name required is button
+		TEXT("30"),                  // the caption of the button
+		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
+		160, 120,                                  // the left and top co-ordinates
+		60, 50,                              // width and height
+		hWnd,                                 // parent window handle
+		(HMENU)ID_BUTTON19,                   // the ID of your button
+		hInstance,                            // the instance of your application
+		NULL);                               // extra bits you dont really need
+
+	hwndButton = CreateWindow(TEXT("button"),                     // The class name required is button
+		TEXT("70"),                  // the caption of the button
+		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
+		160, 180,                                  // the left and top co-ordinates
+		60, 50,                              // width and height
+		hWnd,                                 // parent window handle
+		(HMENU)ID_BUTTON20,                   // the ID of your button
+		hInstance,                            // the instance of your application
+		NULL);                               // extra bits you dont really need
+
+	hwndButton = CreateWindow(TEXT("button"),                     // The class name required is button
+		TEXT("20"),                  // the caption of the button
+		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
+		160, 240,                                  // the left and top co-ordinates
+		60, 50,                              // width and height
+		hWnd,                                 // parent window handle
+		(HMENU)ID_BUTTON21,                   // the ID of your button
+		hInstance,                            // the instance of your application
+		NULL);
+
+	hwndButton = CreateWindow(TEXT("button"),                      // The class name required is button
+		TEXT("Weight:"),                  // the caption of the button
+		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
+		90, 0,                                  // the left and top co-ordinates
+		60, 50,                              // width and height
+		hWnd,                                 // parent window handle
+		(HMENU)ID_BUTTON10,                   // the ID of your button
+		hInstance,                            // the instance of your application
+		NULL);                               // extra bits you dont really need
+
+	hwndButton = CreateWindow(TEXT("button"),                      // The class name required is button
+		TEXT("Height:"),                  // the caption of the button
+		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
+		160, 0,                                  // the left and top co-ordinates
+		60, 50,                              // width and height
+		hWnd,                                 // parent window handle
+		(HMENU)ID_BUTTON17,                   // the ID of your button
+		hInstance,                            // the instance of your application
+		NULL);                               // extra bits you dont really need
 	hwndButton = CreateWindow(TEXT("button"),                      // The class name required is button
 		TEXT("Draw"),                  // the caption of the button
 		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
-		300, 60,                                  // the left and top co-ordinates
+		0, 0,                                  // the left and top co-ordinates
 		80, 50,                              // width and height
 		hWnd,                                 // parent window handle
 		(HMENU)ID_BUTTON1,                   // the ID of your button
@@ -191,24 +352,64 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 		NULL);                               // extra bits you dont really need
 
 	hwndButton = CreateWindow(TEXT("button"),                      // The class name required is button
-		TEXT("DrawAll"),                  // the caption of the button
+		TEXT("Angle1 +"),                  // the caption of the button
 		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
-		300, 0,                                  // the left and top co-ordinates
+		700, 0,                                  // the left and top co-ordinates
 		80, 50,                              // width and height
 		hWnd,                                 // parent window handle
-		(HMENU)ID_BUTTON2,                   // the ID of your button
+		(HMENU)ID_BUTTON11,                   // the ID of your button
 		hInstance,                            // the instance of your application
 		NULL);                               // extra bits you dont really need
 
-	// create button and store the handle                                                       
+	hwndButton = CreateWindow(TEXT("button"),                      // The class name required is button
+		TEXT("Angle1 -"),                  // the caption of the button
+		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
+		790, 0,                                  // the left and top co-ordinates
+		80, 50,                              // width and height
+		hWnd,                                 // parent window handle
+		(HMENU)ID_BUTTON12,                   // the ID of your button
+		hInstance,                            // the instance of your application
+		NULL);                               // extra bits you dont really need
 
-	hwndButton = CreateWindow(TEXT("button"), TEXT("Timer ON"),
-		WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
-		300, 155, 100, 30, hWnd, (HMENU)ID_RBUTTON1, GetModuleHandle(NULL), NULL);
+	hwndButton = CreateWindow(TEXT("button"),                      // The class name required is button
+		TEXT("Angle2 +"),                  // the caption of the button
+		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
+		700, 60,                                  // the left and top co-ordinates
+		80, 50,                              // width and height
+		hWnd,                                 // parent window handle
+		(HMENU)ID_BUTTON13,                   // the ID of your button
+		hInstance,                            // the instance of your application
+		NULL);                               // extra bits you dont really need
 
-	hwndButton = CreateWindow(TEXT("button"), TEXT("Timer OFF"),
-		WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
-		300, 200, 100, 30, hWnd, (HMENU)ID_RBUTTON2, GetModuleHandle(NULL), NULL);
+	hwndButton = CreateWindow(TEXT("button"),                      // The class name required is button
+		TEXT("Angle2 -"),                  // the caption of the button
+		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
+		790, 60,                                  // the left and top co-ordinates
+		80, 50,                              // width and height
+		hWnd,                                 // parent window handle
+		(HMENU)ID_BUTTON14,                   // the ID of your button
+		hInstance,                            // the instance of your application
+		NULL);                               // extra bits you dont really need
+
+	hwndButton = CreateWindow(TEXT("button"),                      // The class name required is button
+		TEXT("Speed +"),                  // the caption of the button
+		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
+		700, 120,                                  // the left and top co-ordinates
+		80, 50,                              // width and height
+		hWnd,                                 // parent window handle
+		(HMENU)ID_BUTTON15,                   // the ID of your button
+		hInstance,                            // the instance of your application
+		NULL);                               // extra bits you dont really need
+
+	hwndButton = CreateWindow(TEXT("button"),                      // The class name required is button
+		TEXT("Speed -"),                  // the caption of the button
+		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
+		790, 120,                                  // the left and top co-ordinates
+		80, 50,                              // width and height
+		hWnd,                                 // parent window handle
+		(HMENU)ID_BUTTON16,                   // the ID of your button
+		hInstance,                            // the instance of your application
+		NULL);                               // extra bits you dont really need
 
 	OnCreate(hWnd);
 
@@ -256,20 +457,48 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			DestroyWindow(hWnd);
 			break;
 		case ID_BUTTON1 :
-			col++;
-			if (col > 10)
-				col = 0;
-			repaintWindow(hWnd, hdc, ps, &drawArea1);
-			break;
-		case ID_BUTTON2 :
 			repaintWindow(hWnd, hdc, ps, NULL);
 			break;
-		case ID_RBUTTON1:
-			SetTimer(hWnd, TMR_1, 25, 0);
+		case ID_BUTTON2:
+		{
+			repaintWindow(hWnd, hdc, ps, NULL);
+			break; 
+		}
+		case ID_BUTTON11:
+		{
+			angle1 += (p * atan(1) * 4 )/ 3;
+			repaintWindow(hWnd, hdc, ps, NULL);
 			break;
-		case ID_RBUTTON2:
-			KillTimer(hWnd, TMR_1);
+		}
+		case ID_BUTTON12:
+		{
+			angle1 -= p * atan(1) * 4 / 3;
+			repaintWindow(hWnd, hdc, ps, NULL);
 			break;
+		}
+		case ID_BUTTON13:
+		{
+			angle2 += p * atan(1) * 4 / 3;
+			repaintWindow(hWnd, hdc, ps, NULL);
+			break;
+		}
+		case ID_BUTTON14:
+		{
+			angle2 -= p * atan(1) * 4 / 3;
+			repaintWindow(hWnd, hdc, ps, NULL);
+			break;
+		}
+		case ID_BUTTON15:
+		{
+			p += 1;
+			break;
+		}
+		case ID_BUTTON16:
+		{
+			if (p != 1)
+				p -= 1;
+			break;
+		}
 		default:
 			return DefWindowProc(hWnd, message, wParam, lParam);
 		}
@@ -318,3 +547,4 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 	}
 	return (INT_PTR)FALSE;
 }
+
