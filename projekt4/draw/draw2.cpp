@@ -26,15 +26,25 @@ RECT drawArea1 = { 0, 0, 150, 200 };
 RECT drawArea2 = { 50, 400, 650, 422};
 int l1 = 150;
 int l2 = 120;
-int angle1 = atan(1) * 4 * 5 / 3;
-int angle2 = angle1 + atan(1) * 4 * 2 / 3;
+double angle1 = - 75 * (atan(1) * 4) / 180;
+double angle2 = - 60 * (atan(1) * 4) / 180;
 int x = 0;
 int y = 0;
 int wSquare = 30;
 int wCircle = 20;
 int wTriangle = 40;
 int wRectangle = 50;
-double p = 1;
+int maxweight = 70;
+int minweight = 20;
+int hSquare = 50;
+int hCircle = 30;
+int hTriangle = 70;
+int hRectangle = 20;
+double p = 10;
+int task = 0;
+int stage = 0;
+int pick = 0;
+int drop = 0;
 
 
 // Forward declarations of functions included in this code module:
@@ -68,6 +78,163 @@ void MyOnPaint(HDC hdc)
 	graphics.DrawEllipse(&pen, 240, 120, 50, 50);
 	graphics.DrawPolygon(&pen, trianglePoints, 3);
 	graphics.DrawRectangle(&pen, 230, 240, 70, 50);
+
+	if (pick == 1 || pick == 2 || pick == 3)
+		graphics.DrawRectangle(&pen, x - 15, y - 15, 30, 30);
+	else if (pick == 10 || pick == 20 || pick == 30 || pick == 40 || pick == 50)
+		graphics.DrawEllipse(&pen, x - 15, y - 15, 30, 30);
+	else if (pick == 100 || pick == 200)
+	{
+		PointF triangleMoving[3];
+		triangleMoving[0] = PointF(x - 15, y + 10);
+		triangleMoving[1] = PointF(x + 15, y + 10);
+		triangleMoving[2] = PointF(x, y - 20);
+
+		graphics.DrawPolygon(&pen, triangleMoving, 3);
+	}
+	else if (pick == 1000 || pick == 2000)
+		graphics.DrawRectangle(&pen, x - 20, y - 15, 40, 30);
+	else if (pick == 11 || pick == 12 || pick == 21)
+	{
+		graphics.DrawRectangle(&pen, x - 15, y - 15, 30, 30);
+		graphics.DrawEllipse(&pen, x - 15, y - 15, 30, 30);
+	}
+	else if (pick == 101 || pick == 102)
+	{
+		PointF triangleMoving[3];
+		triangleMoving[0] = PointF(x - 15, y + 10);
+		triangleMoving[1] = PointF(x + 15, y + 10);
+		triangleMoving[2] = PointF(x, y - 20);
+
+		graphics.DrawPolygon(&pen, triangleMoving, 3);
+		graphics.DrawRectangle(&pen, x - 15, y - 15, 30, 30);
+	}
+	else if (pick == 1001)
+	{
+		graphics.DrawRectangle(&pen, x - 15, y - 15, 30, 30);
+		graphics.DrawRectangle(&pen, x - 20, y - 15, 40, 30);
+	}
+	else if (pick == 110 || pick == 120 || pick == 210)
+	{
+		PointF triangleMoving[3];
+		triangleMoving[0] = PointF(x - 15, y + 10);
+		triangleMoving[1] = PointF(x + 15, y + 10);
+		triangleMoving[2] = PointF(x, y - 20);
+
+		graphics.DrawPolygon(&pen, triangleMoving, 3);
+		graphics.DrawEllipse(&pen, x - 15, y - 15, 30, 30);
+	}
+	else if (pick == 1010 || pick == 1020)
+	{
+		graphics.DrawEllipse(&pen, x - 15, y - 15, 30, 30);
+		graphics.DrawRectangle(&pen, x - 20, y - 15, 40, 30);
+	}
+	else if (pick == 1100)
+	{
+		PointF triangleMoving[3];
+		triangleMoving[0] = PointF(x - 15, y + 10);
+		triangleMoving[1] = PointF(x + 15, y + 10);
+		triangleMoving[2] = PointF(x, y - 20);
+
+		graphics.DrawPolygon(&pen, triangleMoving, 3);
+		graphics.DrawRectangle(&pen, x - 20, y - 15, 40, 30);
+	}
+	else if (pick == 111)
+	{
+		PointF triangleMoving[3];
+		triangleMoving[0] = PointF(x - 15, y + 10);
+		triangleMoving[1] = PointF(x + 15, y + 10);
+		triangleMoving[2] = PointF(x, y - 20);
+
+		graphics.DrawPolygon(&pen, triangleMoving, 3);
+		graphics.DrawEllipse(&pen, x - 15, y - 15, 30, 30);
+		graphics.DrawRectangle(&pen, x - 15, y - 15, 30, 30);
+	}
+	else if (pick == 1011)
+	{
+		graphics.DrawEllipse(&pen, x - 15, y - 15, 30, 30);
+		graphics.DrawRectangle(&pen, x - 15, y - 15, 30, 30);
+		graphics.DrawRectangle(&pen, x - 20, y - 15, 40, 30);
+	}
+
+	if (task == 1)
+	{
+		if (stage == 1)
+			graphics.DrawRectangle(&pen, x - 15, y - 15, 30, 30);
+		else if (stage == 2)
+			graphics.DrawRectangle(&pen, 560, 240, 30, 30);
+		else if (stage == 3)
+		{
+			graphics.DrawRectangle(&pen, x - 15, y - 15, 30, 30);
+			graphics.DrawRectangle(&pen, 560, 240, 30, 30);
+		}
+		else if (stage == 4)
+		{
+			graphics.DrawRectangle(&pen, 560, 205, 30, 30);
+			graphics.DrawRectangle(&pen, 560, 240, 30, 30);
+		}
+		else if (stage == 5)
+		{
+			graphics.DrawRectangle(&pen, x - 15, y - 15, 30, 30);
+			graphics.DrawRectangle(&pen, 560, 205, 30, 30);
+			graphics.DrawRectangle(&pen, 560, 240, 30, 30);
+		}
+		else if (stage == 6)
+		{
+			graphics.DrawRectangle(&pen, 560, 170, 30, 30);
+			graphics.DrawRectangle(&pen, 560, 205, 30, 30);
+			graphics.DrawRectangle(&pen, 560, 240, 30, 30);
+		}
+		else if (stage == 7)
+		{
+			graphics.DrawRectangle(&pen, x - 15, y - 15, 30, 30);
+			graphics.DrawRectangle(&pen, 560, 170, 30, 30);
+			graphics.DrawRectangle(&pen, 560, 205, 30, 30);
+			graphics.DrawRectangle(&pen, 560, 240, 30, 30);
+		}
+		else if (stage == 8)
+		{
+			graphics.DrawRectangle(&pen, 560, 135, 30, 30);
+			graphics.DrawRectangle(&pen, 560, 170, 30, 30);
+			graphics.DrawRectangle(&pen, 560, 205, 30, 30);
+			graphics.DrawRectangle(&pen, 560, 240, 30, 30);
+		}
+		else if (stage == 9)
+		{
+			graphics.DrawRectangle(&pen, x - 15, y - 15, 30, 30);
+			graphics.DrawRectangle(&pen, 560, 135, 30, 30);
+			graphics.DrawRectangle(&pen, 560, 170, 30, 30);
+			graphics.DrawRectangle(&pen, 560, 205, 30, 30);
+			graphics.DrawRectangle(&pen, 560, 240, 30, 30);
+		}
+		else if (stage == 10)
+		{
+			graphics.DrawRectangle(&pen, 560, 100, 30, 30);
+			graphics.DrawRectangle(&pen, 560, 135, 30, 30);
+			graphics.DrawRectangle(&pen, 560, 170, 30, 30);
+			graphics.DrawRectangle(&pen, 560, 205, 30, 30);
+			graphics.DrawRectangle(&pen, 560, 240, 30, 30);
+		}
+		else if (stage == 11)
+		{
+			graphics.DrawRectangle(&pen, x - 15, y - 15, 30, 30);
+			graphics.DrawRectangle(&pen, 560, 100, 30, 30);
+			graphics.DrawRectangle(&pen, 560, 135, 30, 30);
+			graphics.DrawRectangle(&pen, 560, 170, 30, 30);
+			graphics.DrawRectangle(&pen, 560, 205, 30, 30);
+			graphics.DrawRectangle(&pen, 560, 240, 30, 30);
+		}
+		else if (stage == 12)
+		{
+			graphics.DrawRectangle(&pen, 560, 65, 30, 30);
+			graphics.DrawRectangle(&pen, 560, 100, 30, 30);
+			graphics.DrawRectangle(&pen, 560, 135, 30, 30);
+			graphics.DrawRectangle(&pen, 560, 170, 30, 30);
+			graphics.DrawRectangle(&pen, 560, 205, 30, 30);
+			graphics.DrawRectangle(&pen, 560, 240, 30, 30);
+		}
+
+	}
 
 }
 
@@ -411,6 +578,26 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 		hInstance,                            // the instance of your application
 		NULL);                               // extra bits you dont really need
 
+	hwndButton = CreateWindow(TEXT("button"),                      // The class name required is button
+		TEXT("Pick"),                  // the caption of the button
+		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
+		700, 180,                                  // the left and top co-ordinates
+		80, 50,                              // width and height
+		hWnd,                                 // parent window handle
+		(HMENU)ID_BUTTON22,                   // the ID of your button
+		hInstance,                            // the instance of your application
+		NULL);                               // extra bits you dont really need
+
+	hwndButton = CreateWindow(TEXT("button"),                      // The class name required is button
+		TEXT("Drop"),                  // the caption of the button
+		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
+		790, 180,                                  // the left and top co-ordinates
+		80, 50,                              // width and height
+		hWnd,                                 // parent window handle
+		(HMENU)ID_BUTTON23,                   // the ID of your button
+		hInstance,                            // the instance of your application
+		NULL);                               // extra bits you dont really need
+
 	OnCreate(hWnd);
 
 	if (!hWnd)
@@ -461,30 +648,259 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			break;
 		case ID_BUTTON2:
 		{
-			repaintWindow(hWnd, hdc, ps, NULL);
+			task = 1;
+			double a1 = - 120 * (atan(1) * 4) / 180;
+			double a2 = - 134 * (atan(1) * 4) / 180;
+
+			while (angle1 != a1 || angle2 != a2)
+			{
+				if (angle1 > a1)
+					angle1 -= (atan(1) * 4) / 180;
+				else
+					angle1 += (atan(1) * 4) / 180;
+				
+				if (angle2 > a2)
+					angle2 -= (atan(1) * 4) / 180;
+				else
+					angle2 += (atan(1) * 4) / 180;
+				
+				repaintWindow(hWnd, hdc, ps, NULL);
+			}; 
+
+			stage = 1;
+			double a3 = -63 * (atan(1) * 4) / 180;
+			double a4 = -133 * (atan(1) * 4) / 180;
+			while (angle1 != a3 || angle2 != a4)
+			{
+				if (angle1 > a3)
+					angle1 -= (atan(1) * 4) / 180;
+				else
+					angle1 += (atan(1) * 4) / 180;
+
+				if (angle2 > a4)
+					angle2 -= (atan(1) * 4) / 180;
+				else
+					angle2 += (atan(1) * 4) / 180;
+
+				repaintWindow(hWnd, hdc, ps, NULL);
+			};
+
+			stage = 2; 
+			while (angle1 != a1 || angle2 != a2)
+			{
+				if (angle1 > a1)
+					angle1 -= (atan(1) * 4) / 180;
+				else
+					angle1 += (atan(1) * 4) / 180;
+
+				if (angle2 > a2)
+					angle2 -= (atan(1) * 4) / 180;
+				else
+					angle2 += (atan(1) * 4) / 180;
+
+				repaintWindow(hWnd, hdc, ps, NULL);
+			};
+
+			stage = 3;
+			a3 = -72 * (atan(1) * 4) / 180;
+			a4 = -149 * (atan(1) * 4) / 180;
+			while (angle1 != a3 || angle2 != a4)
+			{
+				if (angle1 > a3)
+					angle1 -= (atan(1) * 4) / 180;
+				else
+					angle1 += (atan(1) * 4) / 180;
+
+				if (angle2 > a4)
+					angle2 -= (atan(1) * 4) / 180;
+				else
+					angle2 += (atan(1) * 4) / 180;
+				
+				repaintWindow(hWnd, hdc, ps, NULL);
+			};
+
+			stage = 4;
+			while (angle1 != a1 || angle2 != a2)
+			{
+				if (angle1 > a1)
+					angle1 -= (atan(1) * 4) / 180;
+				else
+					angle1 += (atan(1) * 4) / 180;
+
+				if (angle2 > a2)
+					angle2 -= (atan(1) * 4) / 180;
+				else
+					angle2 += (atan(1) * 4) / 180;
+
+				repaintWindow(hWnd, hdc, ps, NULL);
+			};
+
+			stage = 5; 
+			a3 = -77 * (atan(1) * 4) / 180;
+			a4 = -165 * (atan(1) * 4) / 180;
+			while (angle1 != a3 || angle2 != a4)
+			{
+				if (angle1 > a3)
+					angle1 -= (atan(1) * 4) / 180;
+				else
+					angle1 += (atan(1) * 4) / 180;
+
+				if (angle2 > a4)
+					angle2 -= (atan(1) * 4) / 180;
+				else
+					angle2 += (atan(1) * 4) / 180;
+				
+				repaintWindow(hWnd, hdc, ps, NULL);
+			};
+
+			stage = 6; 
+			while (angle1 != a1 || angle2 != a2)
+			{
+				if (angle1 > a1)
+					angle1 -= (atan(1) * 4) / 180;
+				else
+					angle1 += (atan(1) * 4) / 180;
+
+				if (angle2 > a2)
+					angle2 -= (atan(1) * 4) / 180;
+				else
+					angle2 += (atan(1) * 4) / 180;
+
+				repaintWindow(hWnd, hdc, ps, NULL);
+			};
+
+			stage = 7; 
+			a3 = -78 * (atan(1) * 4) / 180;
+			a4 = -181 * (atan(1) * 4) / 180;
+			while (angle1 != a3 || angle2 != a4)
+			{
+				if (angle1 > a3)
+					angle1 -= (atan(1) * 4) / 180;
+				else
+					angle1 += (atan(1) * 4) / 180;
+
+				if (angle2 > a4)
+					angle2 -= (atan(1) * 4) / 180;
+				else
+					angle2 += (atan(1) * 4) / 180;
+
+				repaintWindow(hWnd, hdc, ps, NULL);
+			};
+
+			stage = 8;
+			while (angle1 != a1 || angle2 != a2)
+			{
+				if (angle1 > a1)
+					angle1 -= (atan(1) * 4) / 180;
+				else
+					angle1 += (atan(1) * 4) / 180;
+
+				if (angle2 > a2)
+					angle2 -= (atan(1) * 4) / 180;
+				else
+					angle2 += (atan(1) * 4) / 180;
+
+				repaintWindow(hWnd, hdc, ps, NULL);
+			};
+
+			stage = 9; 
+			a3 = -76 * (atan(1) * 4) / 180;
+			a4 = -199 * (atan(1) * 4) / 180;
+			while (angle1 != a3 || angle2 != a4)
+			{
+				if (angle1 > a3)
+					angle1 -= (atan(1) * 4) / 180;
+				else
+					angle1 += (atan(1) * 4) / 180;
+
+				if (angle2 > a4)
+					angle2 -= (atan(1) * 4) / 180;
+				else
+					angle2 += (atan(1) * 4) / 180;
+
+				repaintWindow(hWnd, hdc, ps, NULL);
+			};
+
+			stage = 10;
+			while (angle1 != a1 || angle2 != a2)
+			{
+				if (angle1 > a1)
+					angle1 -= (atan(1) * 4) / 180;
+				else
+					angle1 += (atan(1) * 4) / 180;
+
+				if (angle2 > a2)
+					angle2 -= (atan(1) * 4) / 180;
+				else
+					angle2 += (atan(1) * 4) / 180;
+
+				repaintWindow(hWnd, hdc, ps, NULL);
+			};
+
+			stage = 11; 
+			a3 = -64 * (atan(1) * 4) / 180;
+			a4 = -225 * (atan(1) * 4) / 180;
+			while (angle1 != a3 || angle2 != a4)
+			{
+				if (angle1 > a3)
+					angle1 -= (atan(1) * 4) / 180;
+				else
+					angle1 += (atan(1) * 4) / 180;
+
+				if (angle2 > a4)
+					angle2 -= (atan(1) * 4) / 180;
+				else
+					angle2 += (atan(1) * 4) / 180;
+
+				repaintWindow(hWnd, hdc, ps, NULL);
+			};
+
+			stage = 12;
+
 			break; 
+		}
+		case ID_BUTTON3:
+		{
+			double a1 = -106 * (atan(1) * 4) / 180;
+			double a2 = -174 * (atan(1) * 4) / 180;
+
+			break;
+		}
+		case ID_BUTTON4:
+		{
+			double a1 = -110 * (atan(1) * 4) / 180;
+			double a2 = -205 * (atan(1) * 4) / 180;
+
+			break;
+		}
+		case ID_BUTTON5:
+		{
+			double a1 = -123 * (atan(1) * 4) / 180;
+			double a2 = -229 * (atan(1) * 4) / 180;
+
+			break;
 		}
 		case ID_BUTTON11:
 		{
-			angle1 += (p * atan(1) * 4 )/ 3;
+			angle1 += p * (atan(1) * 4) / 180;
 			repaintWindow(hWnd, hdc, ps, NULL);
 			break;
 		}
 		case ID_BUTTON12:
 		{
-			angle1 -= p * atan(1) * 4 / 3;
+			angle1 -= p * (atan(1) * 4) / 180;
 			repaintWindow(hWnd, hdc, ps, NULL);
 			break;
 		}
 		case ID_BUTTON13:
 		{
-			angle2 += p * atan(1) * 4 / 3;
+			angle2 += p * (atan(1) * 4) / 180;
 			repaintWindow(hWnd, hdc, ps, NULL);
 			break;
 		}
 		case ID_BUTTON14:
 		{
-			angle2 -= p * atan(1) * 4 / 3;
+			angle2 -= p * (atan(1) * 4) / 180;
 			repaintWindow(hWnd, hdc, ps, NULL);
 			break;
 		}
@@ -497,6 +913,62 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			if (p != 1)
 				p -= 1;
+			break;
+		}
+		case ID_BUTTON22:
+		{
+			int weight = 0;
+
+			if ((x >= 240 && x <= 290) && (y >= 60 && y <= 110))
+			{
+				weight += wSquare;
+				if (weight <= 100)
+					pick += 1;
+				else
+				{
+					weight -= wSquare;
+				}
+			}
+			else if ((x >= 240 && x <= 290) && (y >= 120 && y <= 170))
+			{
+				weight += wCircle;
+				if (weight <= 100)
+					pick += 10;
+				else
+				{
+					weight -= wCircle;
+
+				}
+			}
+			else if ((x >= 240 && x <= 290) && (y >= 180 && y <= 230))
+			{
+				weight += wTriangle;
+				if (weight <= 100)
+					pick += 100;
+				else
+				{
+					weight -= wTriangle;
+
+				}
+			}
+			else if ((x >= 230 && x <= 300) && (y >= 240 && y <= 290))
+			{
+				weight += wRectangle;
+				if (weight <= 100)
+					pick += 1000;
+				else
+				{
+					weight -= wRectangle;
+
+				}
+			}
+
+			break;
+		}
+		case ID_BUTTON23:
+		{
+
+
 			break;
 		}
 		default:
