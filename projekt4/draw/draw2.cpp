@@ -20,7 +20,6 @@ INT value;
 HWND hwndButton;
 
 // sent data
-int col = 0;
 std::vector<Point> data;
 RECT drawArea1 = { 0, 0, 150, 200 };
 RECT drawArea2 = { 50, 400, 650, 422};
@@ -30,21 +29,11 @@ double angle1 = - 75 * (atan(1) * 4) / 180;
 double angle2 = - 60 * (atan(1) * 4) / 180;
 int x = 0;
 int y = 0;
-int wSquare = 30;
-int wCircle = 20;
-int wTriangle = 40;
-int wRectangle = 50;
-int maxweight = 70;
-int minweight = 20;
-int hSquare = 50;
-int hCircle = 30;
-int hTriangle = 70;
-int hRectangle = 20;
 double p = 10;
-int task = 0;
-int stage = 0;
 int pick = 0;
-int drop = 0;
+int shape = 0;
+int drop[6] = { 0, 0, 0, 0, 0, 0 };
+int i = 0;
 
 
 // Forward declarations of functions included in this code module:
@@ -59,31 +48,37 @@ void MyOnPaint(HDC hdc)
 {
 	Graphics graphics(hdc);
 	Pen pen(Color(255, 0, 0, 255));
-	Pen pen2(Color(255, 25*col, 0, 255));
+	Pen pen1(Color(255, 255 - drop[0], 255 - drop[0], 255));
+	Pen pen2(Color(255, 255 - drop[1], 255 - drop[1], 255));
+	Pen pen3(Color(255, 255 - drop[2], 255 - drop[2], 255));
+	Pen pen4(Color(255, 255 - drop[3], 255 - drop[3], 255));
+	Pen pen5(Color(255, 255 - drop[4], 255 - drop[4], 255));
+	Pen pen6(Color(255, 255 - drop[5], 255 - drop[5], 255));
+
 
 	PointF trianglePoints[3];
-	trianglePoints[0] = PointF(240.0F, 230.0F);
-	trianglePoints[1] = PointF(290.0F, 230.0F);
-	trianglePoints[2] = PointF(265.0F, 180.0F);
+	trianglePoints[0] = PointF(20.0F, 230.0F);
+	trianglePoints[1] = PointF(70.0F, 230.0F);
+	trianglePoints[2] = PointF(45.0F, 180.0F);
 
-	graphics.DrawLine(&pen, 375, 300, 475, 300);
-	int c1 = 425 + cos(angle1) * l1;
+	graphics.DrawLine(&pen, 150, 300, 250, 300);
+	int c1 = 200 + cos(angle1) * l1;
 	int d1 = 300 + sin(angle1) * l1;
-	graphics.DrawLine(&pen, 425, 300, c1, d1);
+	graphics.DrawLine(&pen, 200, 300, c1, d1);
 	x = c1 + cos(angle2) * l2;
 	y = d1 + sin(angle2) * l2;
 	graphics.DrawLine(&pen, c1, d1, x, y);
 
-	graphics.DrawRectangle(&pen, 240, 60, 50, 50);
-	graphics.DrawEllipse(&pen, 240, 120, 50, 50);
+	graphics.DrawRectangle(&pen, 20, 60, 50, 50);
+	graphics.DrawEllipse(&pen, 20, 120, 50, 50);
 	graphics.DrawPolygon(&pen, trianglePoints, 3);
-	graphics.DrawRectangle(&pen, 230, 240, 70, 50);
+	graphics.DrawRectangle(&pen, 10, 240, 70, 50);
 
-	if (pick == 1 || pick == 2 || pick == 3)
+	if (pick == 1)
 		graphics.DrawRectangle(&pen, x - 15, y - 15, 30, 30);
-	else if (pick == 10 || pick == 20 || pick == 30 || pick == 40 || pick == 50)
+	else if (pick == 10)
 		graphics.DrawEllipse(&pen, x - 15, y - 15, 30, 30);
-	else if (pick == 100 || pick == 200)
+	else if (pick == 100)
 	{
 		PointF triangleMoving[3];
 		triangleMoving[0] = PointF(x - 15, y + 10);
@@ -92,149 +87,70 @@ void MyOnPaint(HDC hdc)
 
 		graphics.DrawPolygon(&pen, triangleMoving, 3);
 	}
-	else if (pick == 1000 || pick == 2000)
+	else if (pick == 1000 )
 		graphics.DrawRectangle(&pen, x - 20, y - 15, 40, 30);
-	else if (pick == 11 || pick == 12 || pick == 21)
-	{
-		graphics.DrawRectangle(&pen, x - 15, y - 15, 30, 30);
-		graphics.DrawEllipse(&pen, x - 15, y - 15, 30, 30);
-	}
-	else if (pick == 101 || pick == 102)
-	{
-		PointF triangleMoving[3];
-		triangleMoving[0] = PointF(x - 15, y + 10);
-		triangleMoving[1] = PointF(x + 15, y + 10);
-		triangleMoving[2] = PointF(x, y - 20);
 
-		graphics.DrawPolygon(&pen, triangleMoving, 3);
-		graphics.DrawRectangle(&pen, x - 15, y - 15, 30, 30);
-	}
-	else if (pick == 1001)
-	{
-		graphics.DrawRectangle(&pen, x - 15, y - 15, 30, 30);
-		graphics.DrawRectangle(&pen, x - 20, y - 15, 40, 30);
-	}
-	else if (pick == 110 || pick == 120 || pick == 210)
-	{
-		PointF triangleMoving[3];
-		triangleMoving[0] = PointF(x - 15, y + 10);
-		triangleMoving[1] = PointF(x + 15, y + 10);
-		triangleMoving[2] = PointF(x, y - 20);
+	
 
-		graphics.DrawPolygon(&pen, triangleMoving, 3);
-		graphics.DrawEllipse(&pen, x - 15, y - 15, 30, 30);
-	}
-	else if (pick == 1010 || pick == 1020)
-	{
-		graphics.DrawEllipse(&pen, x - 15, y - 15, 30, 30);
-		graphics.DrawRectangle(&pen, x - 20, y - 15, 40, 30);
-	}
-	else if (pick == 1100)
-	{
-		PointF triangleMoving[3];
-		triangleMoving[0] = PointF(x - 15, y + 10);
-		triangleMoving[1] = PointF(x + 15, y + 10);
-		triangleMoving[2] = PointF(x, y - 20);
+	graphics.DrawLine(&pen, 340, 300, 390, 300);
 
-		graphics.DrawPolygon(&pen, triangleMoving, 3);
-		graphics.DrawRectangle(&pen, x - 20, y - 15, 40, 30);
-	}
-	else if (pick == 111)
+	if (shape == 1)
 	{
-		PointF triangleMoving[3];
-		triangleMoving[0] = PointF(x - 15, y + 10);
-		triangleMoving[1] = PointF(x + 15, y + 10);
-		triangleMoving[2] = PointF(x, y - 20);
-
-		graphics.DrawPolygon(&pen, triangleMoving, 3);
-		graphics.DrawEllipse(&pen, x - 15, y - 15, 30, 30);
-		graphics.DrawRectangle(&pen, x - 15, y - 15, 30, 30);
+		graphics.DrawRectangle(&pen6, 350, 70, 30, 30);
+		graphics.DrawRectangle(&pen5, 350, 110, 30, 30);
+		graphics.DrawRectangle(&pen4, 350, 150, 30, 30);
+		graphics.DrawRectangle(&pen3, 350, 190, 30, 30);
+		graphics.DrawRectangle(&pen2, 350, 230, 30, 30);
+		graphics.DrawRectangle(&pen1, 350, 270, 30, 30);
 	}
-	else if (pick == 1011)
+	else if (shape == 10)
 	{
-		graphics.DrawEllipse(&pen, x - 15, y - 15, 30, 30);
-		graphics.DrawRectangle(&pen, x - 15, y - 15, 30, 30);
-		graphics.DrawRectangle(&pen, x - 20, y - 15, 40, 30);
+		graphics.DrawEllipse(&pen6, 350, 70, 30, 30);
+		graphics.DrawEllipse(&pen5, 350, 110, 30, 30);
+		graphics.DrawEllipse(&pen4, 350, 150, 30, 30);
+		graphics.DrawEllipse(&pen3, 350, 190, 30, 30);
+		graphics.DrawEllipse(&pen2, 350, 230, 30, 30);
+		graphics.DrawEllipse(&pen1, 350, 270, 30, 30);
 	}
-
-	if (task == 1)
+	else if (shape == 1000)
 	{
-		if (stage == 1)
-			graphics.DrawRectangle(&pen, x - 15, y - 15, 30, 30);
-		else if (stage == 2)
-			graphics.DrawRectangle(&pen, 560, 240, 30, 30);
-		else if (stage == 3)
-		{
-			graphics.DrawRectangle(&pen, x - 15, y - 15, 30, 30);
-			graphics.DrawRectangle(&pen, 560, 240, 30, 30);
-		}
-		else if (stage == 4)
-		{
-			graphics.DrawRectangle(&pen, 560, 205, 30, 30);
-			graphics.DrawRectangle(&pen, 560, 240, 30, 30);
-		}
-		else if (stage == 5)
-		{
-			graphics.DrawRectangle(&pen, x - 15, y - 15, 30, 30);
-			graphics.DrawRectangle(&pen, 560, 205, 30, 30);
-			graphics.DrawRectangle(&pen, 560, 240, 30, 30);
-		}
-		else if (stage == 6)
-		{
-			graphics.DrawRectangle(&pen, 560, 170, 30, 30);
-			graphics.DrawRectangle(&pen, 560, 205, 30, 30);
-			graphics.DrawRectangle(&pen, 560, 240, 30, 30);
-		}
-		else if (stage == 7)
-		{
-			graphics.DrawRectangle(&pen, x - 15, y - 15, 30, 30);
-			graphics.DrawRectangle(&pen, 560, 170, 30, 30);
-			graphics.DrawRectangle(&pen, 560, 205, 30, 30);
-			graphics.DrawRectangle(&pen, 560, 240, 30, 30);
-		}
-		else if (stage == 8)
-		{
-			graphics.DrawRectangle(&pen, 560, 135, 30, 30);
-			graphics.DrawRectangle(&pen, 560, 170, 30, 30);
-			graphics.DrawRectangle(&pen, 560, 205, 30, 30);
-			graphics.DrawRectangle(&pen, 560, 240, 30, 30);
-		}
-		else if (stage == 9)
-		{
-			graphics.DrawRectangle(&pen, x - 15, y - 15, 30, 30);
-			graphics.DrawRectangle(&pen, 560, 135, 30, 30);
-			graphics.DrawRectangle(&pen, 560, 170, 30, 30);
-			graphics.DrawRectangle(&pen, 560, 205, 30, 30);
-			graphics.DrawRectangle(&pen, 560, 240, 30, 30);
-		}
-		else if (stage == 10)
-		{
-			graphics.DrawRectangle(&pen, 560, 100, 30, 30);
-			graphics.DrawRectangle(&pen, 560, 135, 30, 30);
-			graphics.DrawRectangle(&pen, 560, 170, 30, 30);
-			graphics.DrawRectangle(&pen, 560, 205, 30, 30);
-			graphics.DrawRectangle(&pen, 560, 240, 30, 30);
-		}
-		else if (stage == 11)
-		{
-			graphics.DrawRectangle(&pen, x - 15, y - 15, 30, 30);
-			graphics.DrawRectangle(&pen, 560, 100, 30, 30);
-			graphics.DrawRectangle(&pen, 560, 135, 30, 30);
-			graphics.DrawRectangle(&pen, 560, 170, 30, 30);
-			graphics.DrawRectangle(&pen, 560, 205, 30, 30);
-			graphics.DrawRectangle(&pen, 560, 240, 30, 30);
-		}
-		else if (stage == 12)
-		{
-			graphics.DrawRectangle(&pen, 560, 65, 30, 30);
-			graphics.DrawRectangle(&pen, 560, 100, 30, 30);
-			graphics.DrawRectangle(&pen, 560, 135, 30, 30);
-			graphics.DrawRectangle(&pen, 560, 170, 30, 30);
-			graphics.DrawRectangle(&pen, 560, 205, 30, 30);
-			graphics.DrawRectangle(&pen, 560, 240, 30, 30);
-		}
-
+		graphics.DrawRectangle(&pen6, 345, 70, 40, 30);
+		graphics.DrawRectangle(&pen5, 345, 110, 40, 30);
+		graphics.DrawRectangle(&pen4, 345, 150, 40, 30);
+		graphics.DrawRectangle(&pen3, 345, 190, 40, 30);
+		graphics.DrawRectangle(&pen2, 345, 230, 40, 30);
+		graphics.DrawRectangle(&pen1, 345, 270, 40, 30);
 	}
+	else if (shape == 100)
+	{
+		PointF triangleTower[6][3];
+		triangleTower[0][0] = PointF(350, 300);
+		triangleTower[0][1] = PointF(380, 300);
+		triangleTower[0][2] = PointF(365, 270);
+		triangleTower[1][0] = PointF(350, 260);
+		triangleTower[1][1] = PointF(380, 260);
+		triangleTower[1][2] = PointF(365, 230);
+		triangleTower[2][0] = PointF(350, 220);
+		triangleTower[2][1] = PointF(380, 220);
+		triangleTower[2][2] = PointF(365, 190);
+		triangleTower[3][0] = PointF(350, 180);
+		triangleTower[3][1] = PointF(380, 180);
+		triangleTower[3][2] = PointF(365, 150);
+		triangleTower[4][0] = PointF(350, 140);
+		triangleTower[4][1] = PointF(380, 140);
+		triangleTower[4][2] = PointF(365, 110);
+		triangleTower[5][0] = PointF(350, 100);
+		triangleTower[5][1] = PointF(380, 100);
+		triangleTower[5][2] = PointF(365, 70);
+
+		graphics.DrawPolygon(&pen6, triangleTower[5], 3);
+		graphics.DrawPolygon(&pen5, triangleTower[4], 3);
+		graphics.DrawPolygon(&pen4, triangleTower[3], 3);
+		graphics.DrawPolygon(&pen3, triangleTower[2], 3);
+		graphics.DrawPolygon(&pen2, triangleTower[1], 3);
+		graphics.DrawPolygon(&pen1, triangleTower[0], 3);
+	}
+
 
 }
 
@@ -369,146 +285,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 	// create button and store the handle                                                       
 	
-	hwndButton = CreateWindow(TEXT("button"),                     // The class name required is button
-		TEXT("Tower S"),                  // the caption of the button
-		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
-		0, 60,                                  // the left and top co-ordinates
-		80, 50,                              // width and height
-		hWnd,                                 // parent window handle
-		(HMENU)ID_BUTTON2,                   // the ID of your button
-		hInstance,                            // the instance of your application
-		NULL);                               // extra bits you dont really need
-
-	hwndButton = CreateWindow(TEXT("button"),                     // The class name required is button
-		TEXT("Tower C"),                  // the caption of the button
-		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
-		0, 120,                                  // the left and top co-ordinates
-		80, 50,                              // width and height
-		hWnd,                                 // parent window handle
-		(HMENU)ID_BUTTON3,                   // the ID of your button
-		hInstance,                            // the instance of your application
-		NULL);                               // extra bits you dont really need
-	
-	hwndButton = CreateWindow(TEXT("button"),                     // The class name required is button
-		TEXT("Tower T"),                  // the caption of the button
-		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
-		0, 180,                                  // the left and top co-ordinates
-		80, 50,                              // width and height
-		hWnd,                                 // parent window handle
-		(HMENU)ID_BUTTON4,                   // the ID of your button
-		hInstance,                            // the instance of your application
-		NULL);                               // extra bits you dont really need
-
-	hwndButton = CreateWindow(TEXT("button"),                     // The class name required is button
-		TEXT("Tower R"),                  // the caption of the button
-		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
-		0, 240,                                  // the left and top co-ordinates
-		80, 50,                              // width and height
-		hWnd,                                 // parent window handle
-		(HMENU)ID_BUTTON5,                   // the ID of your button
-		hInstance,                            // the instance of your application
-		NULL);                               // extra bits you dont really need
-
-	hwndButton = CreateWindow(TEXT("button"),                     // The class name required is button
-		TEXT("30"),                  // the caption of the button
-		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
-		90, 60,                                  // the left and top co-ordinates
-		60, 50,                              // width and height
-		hWnd,                                 // parent window handle
-		(HMENU)ID_BUTTON6,                   // the ID of your button
-		hInstance,                            // the instance of your application
-		NULL);                               // extra bits you dont really need
-
-	hwndButton = CreateWindow(TEXT("button"),                     // The class name required is button
-		TEXT("20"),                  // the caption of the button
-		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
-		90, 120,                                  // the left and top co-ordinates
-		60, 50,                              // width and height
-		hWnd,                                 // parent window handle
-		(HMENU)ID_BUTTON7,                   // the ID of your button
-		hInstance,                            // the instance of your application
-		NULL);                               // extra bits you dont really need
-
-	hwndButton = CreateWindow(TEXT("button"),                     // The class name required is button
-		TEXT("40"),                  // the caption of the button
-		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
-		90, 180,                                  // the left and top co-ordinates
-		60, 50,                              // width and height
-		hWnd,                                 // parent window handle
-		(HMENU)ID_BUTTON8,                   // the ID of your button
-		hInstance,                            // the instance of your application
-		NULL);                               // extra bits you dont really need
-
-	hwndButton = CreateWindow(TEXT("button"),                     // The class name required is button
-		TEXT("50"),                  // the caption of the button
-		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
-		90, 240,                                  // the left and top co-ordinates
-		60, 50,                              // width and height
-		hWnd,                                 // parent window handle
-		(HMENU)ID_BUTTON9,                   // the ID of your button
-		hInstance,                            // the instance of your application
-		NULL);                               // extra bits you dont really need
-
-	hwndButton = CreateWindow(TEXT("button"),                     // The class name required is button
-		TEXT("50"),                  // the caption of the button
-		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
-		160, 60,                                  // the left and top co-ordinates
-		60, 50,                              // width and height
-		hWnd,                                 // parent window handle
-		(HMENU)ID_BUTTON18,                   // the ID of your button
-		hInstance,                            // the instance of your application
-		NULL);                               // extra bits you dont really need
-
-	hwndButton = CreateWindow(TEXT("button"),                     // The class name required is button
-		TEXT("30"),                  // the caption of the button
-		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
-		160, 120,                                  // the left and top co-ordinates
-		60, 50,                              // width and height
-		hWnd,                                 // parent window handle
-		(HMENU)ID_BUTTON19,                   // the ID of your button
-		hInstance,                            // the instance of your application
-		NULL);                               // extra bits you dont really need
-
-	hwndButton = CreateWindow(TEXT("button"),                     // The class name required is button
-		TEXT("70"),                  // the caption of the button
-		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
-		160, 180,                                  // the left and top co-ordinates
-		60, 50,                              // width and height
-		hWnd,                                 // parent window handle
-		(HMENU)ID_BUTTON20,                   // the ID of your button
-		hInstance,                            // the instance of your application
-		NULL);                               // extra bits you dont really need
-
-	hwndButton = CreateWindow(TEXT("button"),                     // The class name required is button
-		TEXT("20"),                  // the caption of the button
-		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
-		160, 240,                                  // the left and top co-ordinates
-		60, 50,                              // width and height
-		hWnd,                                 // parent window handle
-		(HMENU)ID_BUTTON21,                   // the ID of your button
-		hInstance,                            // the instance of your application
-		NULL);
-
-	hwndButton = CreateWindow(TEXT("button"),                      // The class name required is button
-		TEXT("Weight:"),                  // the caption of the button
-		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
-		90, 0,                                  // the left and top co-ordinates
-		60, 50,                              // width and height
-		hWnd,                                 // parent window handle
-		(HMENU)ID_BUTTON10,                   // the ID of your button
-		hInstance,                            // the instance of your application
-		NULL);                               // extra bits you dont really need
-
-	hwndButton = CreateWindow(TEXT("button"),                      // The class name required is button
-		TEXT("Height:"),                  // the caption of the button
-		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
-		160, 0,                                  // the left and top co-ordinates
-		60, 50,                              // width and height
-		hWnd,                                 // parent window handle
-		(HMENU)ID_BUTTON17,                   // the ID of your button
-		hInstance,                            // the instance of your application
-		NULL);                               // extra bits you dont really need
-	hwndButton = CreateWindow(TEXT("button"),                      // The class name required is button
+		hwndButton = CreateWindow(TEXT("button"),                      // The class name required is button
 		TEXT("Draw"),                  // the caption of the button
 		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
 		0, 0,                                  // the left and top co-ordinates
@@ -519,42 +296,42 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 		NULL);                               // extra bits you dont really need
 
 	hwndButton = CreateWindow(TEXT("button"),                      // The class name required is button
-		TEXT("Angle1 +"),                  // the caption of the button
+		TEXT("Angle1 -"),                  // the caption of the button
 		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
 		700, 0,                                  // the left and top co-ordinates
 		80, 50,                              // width and height
 		hWnd,                                 // parent window handle
-		(HMENU)ID_BUTTON11,                   // the ID of your button
+		(HMENU)ID_BUTTONA1,                   // the ID of your button
 		hInstance,                            // the instance of your application
 		NULL);                               // extra bits you dont really need
 
 	hwndButton = CreateWindow(TEXT("button"),                      // The class name required is button
-		TEXT("Angle1 -"),                  // the caption of the button
+		TEXT("Angle1 +"),                  // the caption of the button
 		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
 		790, 0,                                  // the left and top co-ordinates
 		80, 50,                              // width and height
 		hWnd,                                 // parent window handle
-		(HMENU)ID_BUTTON12,                   // the ID of your button
-		hInstance,                            // the instance of your application
-		NULL);                               // extra bits you dont really need
-
-	hwndButton = CreateWindow(TEXT("button"),                      // The class name required is button
-		TEXT("Angle2 +"),                  // the caption of the button
-		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
-		700, 60,                                  // the left and top co-ordinates
-		80, 50,                              // width and height
-		hWnd,                                 // parent window handle
-		(HMENU)ID_BUTTON13,                   // the ID of your button
+		(HMENU)ID_BUTTONA2,                   // the ID of your button
 		hInstance,                            // the instance of your application
 		NULL);                               // extra bits you dont really need
 
 	hwndButton = CreateWindow(TEXT("button"),                      // The class name required is button
 		TEXT("Angle2 -"),                  // the caption of the button
 		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
+		700, 60,                                  // the left and top co-ordinates
+		80, 50,                              // width and height
+		hWnd,                                 // parent window handle
+		(HMENU)ID_BUTTONA3,                   // the ID of your button
+		hInstance,                            // the instance of your application
+		NULL);                               // extra bits you dont really need
+
+	hwndButton = CreateWindow(TEXT("button"),                      // The class name required is button
+		TEXT("Angle2 +"),                  // the caption of the button
+		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,  // the styles
 		790, 60,                                  // the left and top co-ordinates
 		80, 50,                              // width and height
 		hWnd,                                 // parent window handle
-		(HMENU)ID_BUTTON14,                   // the ID of your button
+		(HMENU)ID_BUTTONA4,                   // the ID of your button
 		hInstance,                            // the instance of your application
 		NULL);                               // extra bits you dont really need
 
@@ -564,7 +341,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 		700, 120,                                  // the left and top co-ordinates
 		80, 50,                              // width and height
 		hWnd,                                 // parent window handle
-		(HMENU)ID_BUTTON15,                   // the ID of your button
+		(HMENU)ID_BUTTONS1,                   // the ID of your button
 		hInstance,                            // the instance of your application
 		NULL);                               // extra bits you dont really need
 
@@ -574,7 +351,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 		790, 120,                                  // the left and top co-ordinates
 		80, 50,                              // width and height
 		hWnd,                                 // parent window handle
-		(HMENU)ID_BUTTON16,                   // the ID of your button
+		(HMENU)ID_BUTTONS2,                   // the ID of your button
 		hInstance,                            // the instance of your application
 		NULL);                               // extra bits you dont really need
 
@@ -584,7 +361,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 		700, 180,                                  // the left and top co-ordinates
 		80, 50,                              // width and height
 		hWnd,                                 // parent window handle
-		(HMENU)ID_BUTTON22,                   // the ID of your button
+		(HMENU)ID_BUTTONP,                   // the ID of your button
 		hInstance,                            // the instance of your application
 		NULL);                               // extra bits you dont really need
 
@@ -594,7 +371,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 		790, 180,                                  // the left and top co-ordinates
 		80, 50,                              // width and height
 		hWnd,                                 // parent window handle
-		(HMENU)ID_BUTTON23,                   // the ID of your button
+		(HMENU)ID_BUTTOND,                   // the ID of your button
 		hInstance,                            // the instance of your application
 		NULL);                               // extra bits you dont really need
 
@@ -646,329 +423,73 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case ID_BUTTON1 :
 			repaintWindow(hWnd, hdc, ps, NULL);
 			break;
-		case ID_BUTTON2:
-		{
-			task = 1;
-			double a1 = - 120 * (atan(1) * 4) / 180;
-			double a2 = - 134 * (atan(1) * 4) / 180;
-
-			while (angle1 != a1 || angle2 != a2)
-			{
-				if (angle1 > a1)
-					angle1 -= (atan(1) * 4) / 180;
-				else
-					angle1 += (atan(1) * 4) / 180;
-				
-				if (angle2 > a2)
-					angle2 -= (atan(1) * 4) / 180;
-				else
-					angle2 += (atan(1) * 4) / 180;
-				
-				repaintWindow(hWnd, hdc, ps, NULL);
-			}; 
-
-			stage = 1;
-			double a3 = -63 * (atan(1) * 4) / 180;
-			double a4 = -133 * (atan(1) * 4) / 180;
-			while (angle1 != a3 || angle2 != a4)
-			{
-				if (angle1 > a3)
-					angle1 -= (atan(1) * 4) / 180;
-				else
-					angle1 += (atan(1) * 4) / 180;
-
-				if (angle2 > a4)
-					angle2 -= (atan(1) * 4) / 180;
-				else
-					angle2 += (atan(1) * 4) / 180;
-
-				repaintWindow(hWnd, hdc, ps, NULL);
-			};
-
-			stage = 2; 
-			while (angle1 != a1 || angle2 != a2)
-			{
-				if (angle1 > a1)
-					angle1 -= (atan(1) * 4) / 180;
-				else
-					angle1 += (atan(1) * 4) / 180;
-
-				if (angle2 > a2)
-					angle2 -= (atan(1) * 4) / 180;
-				else
-					angle2 += (atan(1) * 4) / 180;
-
-				repaintWindow(hWnd, hdc, ps, NULL);
-			};
-
-			stage = 3;
-			a3 = -72 * (atan(1) * 4) / 180;
-			a4 = -149 * (atan(1) * 4) / 180;
-			while (angle1 != a3 || angle2 != a4)
-			{
-				if (angle1 > a3)
-					angle1 -= (atan(1) * 4) / 180;
-				else
-					angle1 += (atan(1) * 4) / 180;
-
-				if (angle2 > a4)
-					angle2 -= (atan(1) * 4) / 180;
-				else
-					angle2 += (atan(1) * 4) / 180;
-				
-				repaintWindow(hWnd, hdc, ps, NULL);
-			};
-
-			stage = 4;
-			while (angle1 != a1 || angle2 != a2)
-			{
-				if (angle1 > a1)
-					angle1 -= (atan(1) * 4) / 180;
-				else
-					angle1 += (atan(1) * 4) / 180;
-
-				if (angle2 > a2)
-					angle2 -= (atan(1) * 4) / 180;
-				else
-					angle2 += (atan(1) * 4) / 180;
-
-				repaintWindow(hWnd, hdc, ps, NULL);
-			};
-
-			stage = 5; 
-			a3 = -77 * (atan(1) * 4) / 180;
-			a4 = -165 * (atan(1) * 4) / 180;
-			while (angle1 != a3 || angle2 != a4)
-			{
-				if (angle1 > a3)
-					angle1 -= (atan(1) * 4) / 180;
-				else
-					angle1 += (atan(1) * 4) / 180;
-
-				if (angle2 > a4)
-					angle2 -= (atan(1) * 4) / 180;
-				else
-					angle2 += (atan(1) * 4) / 180;
-				
-				repaintWindow(hWnd, hdc, ps, NULL);
-			};
-
-			stage = 6; 
-			while (angle1 != a1 || angle2 != a2)
-			{
-				if (angle1 > a1)
-					angle1 -= (atan(1) * 4) / 180;
-				else
-					angle1 += (atan(1) * 4) / 180;
-
-				if (angle2 > a2)
-					angle2 -= (atan(1) * 4) / 180;
-				else
-					angle2 += (atan(1) * 4) / 180;
-
-				repaintWindow(hWnd, hdc, ps, NULL);
-			};
-
-			stage = 7; 
-			a3 = -78 * (atan(1) * 4) / 180;
-			a4 = -181 * (atan(1) * 4) / 180;
-			while (angle1 != a3 || angle2 != a4)
-			{
-				if (angle1 > a3)
-					angle1 -= (atan(1) * 4) / 180;
-				else
-					angle1 += (atan(1) * 4) / 180;
-
-				if (angle2 > a4)
-					angle2 -= (atan(1) * 4) / 180;
-				else
-					angle2 += (atan(1) * 4) / 180;
-
-				repaintWindow(hWnd, hdc, ps, NULL);
-			};
-
-			stage = 8;
-			while (angle1 != a1 || angle2 != a2)
-			{
-				if (angle1 > a1)
-					angle1 -= (atan(1) * 4) / 180;
-				else
-					angle1 += (atan(1) * 4) / 180;
-
-				if (angle2 > a2)
-					angle2 -= (atan(1) * 4) / 180;
-				else
-					angle2 += (atan(1) * 4) / 180;
-
-				repaintWindow(hWnd, hdc, ps, NULL);
-			};
-
-			stage = 9; 
-			a3 = -76 * (atan(1) * 4) / 180;
-			a4 = -199 * (atan(1) * 4) / 180;
-			while (angle1 != a3 || angle2 != a4)
-			{
-				if (angle1 > a3)
-					angle1 -= (atan(1) * 4) / 180;
-				else
-					angle1 += (atan(1) * 4) / 180;
-
-				if (angle2 > a4)
-					angle2 -= (atan(1) * 4) / 180;
-				else
-					angle2 += (atan(1) * 4) / 180;
-
-				repaintWindow(hWnd, hdc, ps, NULL);
-			};
-
-			stage = 10;
-			while (angle1 != a1 || angle2 != a2)
-			{
-				if (angle1 > a1)
-					angle1 -= (atan(1) * 4) / 180;
-				else
-					angle1 += (atan(1) * 4) / 180;
-
-				if (angle2 > a2)
-					angle2 -= (atan(1) * 4) / 180;
-				else
-					angle2 += (atan(1) * 4) / 180;
-
-				repaintWindow(hWnd, hdc, ps, NULL);
-			};
-
-			stage = 11; 
-			a3 = -64 * (atan(1) * 4) / 180;
-			a4 = -225 * (atan(1) * 4) / 180;
-			while (angle1 != a3 || angle2 != a4)
-			{
-				if (angle1 > a3)
-					angle1 -= (atan(1) * 4) / 180;
-				else
-					angle1 += (atan(1) * 4) / 180;
-
-				if (angle2 > a4)
-					angle2 -= (atan(1) * 4) / 180;
-				else
-					angle2 += (atan(1) * 4) / 180;
-
-				repaintWindow(hWnd, hdc, ps, NULL);
-			};
-
-			stage = 12;
-
-			break; 
-		}
-		case ID_BUTTON3:
-		{
-			double a1 = -106 * (atan(1) * 4) / 180;
-			double a2 = -174 * (atan(1) * 4) / 180;
-
-			break;
-		}
-		case ID_BUTTON4:
-		{
-			double a1 = -110 * (atan(1) * 4) / 180;
-			double a2 = -205 * (atan(1) * 4) / 180;
-
-			break;
-		}
-		case ID_BUTTON5:
-		{
-			double a1 = -123 * (atan(1) * 4) / 180;
-			double a2 = -229 * (atan(1) * 4) / 180;
-
-			break;
-		}
-		case ID_BUTTON11:
+		case ID_BUTTONA1:
 		{
 			angle1 += p * (atan(1) * 4) / 180;
 			repaintWindow(hWnd, hdc, ps, NULL);
 			break;
 		}
-		case ID_BUTTON12:
+		case ID_BUTTONA2:
 		{
 			angle1 -= p * (atan(1) * 4) / 180;
 			repaintWindow(hWnd, hdc, ps, NULL);
 			break;
 		}
-		case ID_BUTTON13:
+		case ID_BUTTONA3:
 		{
 			angle2 += p * (atan(1) * 4) / 180;
 			repaintWindow(hWnd, hdc, ps, NULL);
 			break;
 		}
-		case ID_BUTTON14:
+		case ID_BUTTONA4:
 		{
 			angle2 -= p * (atan(1) * 4) / 180;
 			repaintWindow(hWnd, hdc, ps, NULL);
 			break;
 		}
-		case ID_BUTTON15:
+		case ID_BUTTONS1:
 		{
 			p += 1;
 			break;
 		}
-		case ID_BUTTON16:
+		case ID_BUTTONS2:
 		{
 			if (p != 1)
 				p -= 1;
 			break;
 		}
-		case ID_BUTTON22:
+		case ID_BUTTONP:
 		{
-			int weight = 0;
 
-			if ((x >= 240 && x <= 290) && (y >= 60 && y <= 110))
+			if ((x >= 0 && x <= 60) && (y >= 60 && y <= 110))
 			{
-				weight += wSquare;
-				if (weight <= 100)
-					pick += 1;
-				else
-				{
-					weight -= wSquare;
-				}
+				pick = 1;
+				shape = 1;
 			}
-			else if ((x >= 240 && x <= 290) && (y >= 120 && y <= 170))
+			else if ((x >= 0 && x <= 60) && (y >= 120 && y <= 170))
 			{
-				weight += wCircle;
-				if (weight <= 100)
-					pick += 10;
-				else
-				{
-					weight -= wCircle;
-
-				}
+				pick = 10;
+				shape = 10;
 			}
-			else if ((x >= 240 && x <= 290) && (y >= 180 && y <= 230))
+			else if ((x >= 0 && x <= 60) && (y >= 180 && y <= 230))
 			{
-				weight += wTriangle;
-				if (weight <= 100)
-					pick += 100;
-				else
-				{
-					weight -= wTriangle;
-
-				}
+				pick = 100;
+				shape = 100;
 			}
-			else if ((x >= 230 && x <= 300) && (y >= 240 && y <= 290))
+			else if ((x >= 0 && x <= 60) && (y >= 240 && y <= 290))
 			{
-				weight += wRectangle;
-				if (weight <= 100)
-					pick += 1000;
-				else
-				{
-					weight -= wRectangle;
-
-				}
+				pick = 1000;
+				shape = 1000;
 			}
-
 			break;
 		}
-		case ID_BUTTON23:
+		case ID_BUTTOND:
 		{
-
-
+			drop[i] = 255;
+			i++;
+			if (i == 6)
+				i = 0;
+			pick = 0;
 			break;
 		}
 		default:
