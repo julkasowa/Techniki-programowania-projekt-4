@@ -6,7 +6,7 @@ Arm is operated by addition or substraction of angles. Angle1 is between first a
 
 Pick and drop button are responsible for picking up the figure and later droping it at designated place. 
 
-There is posibility of choosing different shapes.
+There is posibility of choosing different shapes, while speed can also be adjusted by speed+ and speed- buttnons.
 
 
 
